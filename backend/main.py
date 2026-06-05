@@ -6,7 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import text
 from sqlalchemy.orm import Session
 
-from database import Base, engine, get_db
+from database import get_db
 from models import Product
 
 load_dotenv()
@@ -24,10 +24,8 @@ app.add_middleware(
 )
 
 
-@app.on_event("startup")
-def on_startup():
-    if engine is not None:
-        Base.metadata.create_all(bind=engine)
+# Schema is managed by Alembic migrations (run `alembic upgrade head`),
+# not by create_all at startup. See alembic/ and README section 3.
 
 
 @app.get("/")
